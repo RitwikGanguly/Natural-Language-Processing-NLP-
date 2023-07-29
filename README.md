@@ -502,8 +502,47 @@ These word embeddings are used as pre-trained word embeddings in various NLP tas
 
 ---
 
+**Word2Vec**
 
+Word2Vec is a neural network-based technique used in natural language processing (NLP) to generate word embeddings from a training text corpus. These word embeddings represent words as dense vectors in a continuous vector space, capturing semantic relationships between words.
 
+**Continuous Bag-of-Words (CBOW)**
+
+CBOW is one of the learning algorithms used in Word2Vec. In the CBOW model, the objective is to predict the target word based on the surrounding context words. It takes a fixed-size window of context words and tries to predict the target word at the center of the window. CBOW is faster and performs well for frequent words but may not be as effective for rare words.
+
+**Skip-Gram**
+
+Skip-Gram is another learning algorithm used in Word2Vec. In this model, the target word is taken as input, and the objective is to predict the surrounding context words. Skip-Gram aims to maximize the probability of predicting context words given the target word. It is slower than CBOW but often performs better, especially for rare words, as it provides more training data for infrequent word-context pairs.
+
+**Context (Window) Size**
+
+The context size, also known as the window size, is a parameter in Word2Vec models. For Skip-Gram, it typically takes a target word and tries to predict context words within a window. The context size is usually set around 10 for Skip-Gram and around 5 for CBOW.
+
+The figure below illustrates the difference between CBOW and Skip-Gram:
+
+```
+Continuous Bag-of-Words (CBOW):
+Context Words -> CBOW Model -> Target Word
+
+Skip-Gram:
+Target Word -> Skip-Gram Model -> Context Words
+```
+
+**Word Vector Quality**
+
+The quality of the learned word vectors is affected by several factors:
+
+1. **Corpus size and quality:** The size and quality of the training dataset can significantly impact the word vector quality.
+
+2. **Word vector size:** The dimensionality of the word vectors (embedding size) can affect the richness of semantic information captured. Larger sizes may be beneficial, but it's not always the case.
+
+3. **Model structure and algorithm:** The chosen Word2Vec architecture (CBOW or Skip-Gram) and the training algorithm influence the final word vector quality.
+
+The quality of the word vectors is crucial because it affects the downstream tasks’ performance. The quality of the word vectors are mainly affected by three factors:
+
+- Corpus size and quality for the training dataset.
+- The size of the word vectors. The dimensionality of the word vectors is usually more is better, but not always.
+- The training model structure and algorithm.
 
 
 
