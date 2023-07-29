@@ -356,69 +356,153 @@ Each row of the count vector represents a document, and each column represents a
 
 ---
 
-Question 7: What is TF-IDF?
-TF-IDF stands for term frequency-inverse document frequency. It measures the importance of a term in a document against all the documents in a corpus. It increases proportionally to the number of times a word appears in the document and decreases by the frequency of the word in the whole corpus.
+**Question 7: What is TF-IDF?**
 
-The formular is : 𝑇𝐹-𝐼𝐷𝐹(𝑡)=𝑇𝐹(𝑡)∗𝐼𝐷𝐹(𝑡)
+TF-IDF stands for Term Frequency-Inverse Document Frequency. It is a numerical representation of words in a document based on their importance within the document and the entire corpus. The purpose of TF-IDF is to highlight words that are both frequent in a specific document and relatively rare across the entire corpus, thus helping to identify the most relevant and distinctive words in each document.
 
-𝑇𝐹 stands for Term Frequency, which measures how many times a term occurs in a document. We expect a term to appear more times in longer documents than in shorter ones, so the term frequency is often normalized by the total number of terms in the document. It is usually denoted by 𝑇𝐹(𝑡,𝑑), indicating that the term frequency for a term is determined by the term frequency 𝑡 and its document length 𝑑.
-𝐼𝐷𝐹 stands for Inverse Document Frequency, which measures how frequently a term appears in the whole corpus. This is important because certain terms may appear a lot of times in a document but also appear a lot of times in other documents in the corpus, which makes it not so special for the document. Therefore, we need to weigh down such terms and scale up the weights of the terms not frequent across all the documents.
-👉 𝐼𝐷𝐹(𝑡)=𝑙𝑜𝑔((1+𝑁)/(1+𝐷𝐹(𝑡,𝑑))+1) where 𝑁 is the total number of documents in the corpus and 𝐷𝐹(𝑡,𝑑) is the document frequency of the term.
+**TF (Term Frequency):** This measures the frequency of a term (word) within a document. It is calculated as the number of times a term appears in a document divided by the total number of terms in that document. The higher the TF value, the more important the term is in that specific document.
 
-👉 1 is added to the logarithm part of the 𝐼𝐷𝐹 to prevent zeroing out the terms that appear in every document in the corpus. When a term appears in all the documents, the numerator and denominator have the same value, so the result is 1. 𝑙𝑜𝑔1=0, so IDF equals 0 and hence 𝑇𝐹-𝐼𝐷𝐹 equals 0. Adding 1 to the equation makes the value in the logarithm always greater than 1, which prevents zeroing out terms from happening.
+**IDF (Inverse Document Frequency):** This measures the rarity of a term across the entire corpus. It is calculated as the logarithm of the total number of documents divided by the number of documents containing the term. The higher the IDF value, the more unique and important the term is in the corpus.
 
-👉 Adding 1 to the numerator and denominator of the equation prevents zero division. We can think of it as adding an extra document with all the terms in the corpus.
+The TF-IDF score is the product of TF and IDF:
 
+**TF-IDF = TF * IDF**
+
+The TF-IDF score provides a way to give higher weight to important words in a document while downplaying common and unimportant words.
+
+**Example:**
+
+```python
 # TFIDF Vectorization
 from sklearn.feature_extraction.text import TfidfVectorizer
 tfidf = TfidfVectorizer()
 
 # Example text
-text1 = ['Data science is fun.', 'Data science helps us to make data driven decisions.']
+text1 = ['Data science is fun.', 'Data science helps us to make data-driven decisions.']
 
 # Fit the vectorizer
 tfidf.fit(text1)
 
-# Print out the vovabulary
+# Print out the vocabulary
 print('Vocabulary: ')
 print(tfidf.vocabulary_)
-Fitting the input text using TfidfVectorizer from sklearn automatically creates IDs for each vocabulary in the corpus.
+```
 
-# TFIDF Vectorization
-from sklearn.feature_extraction.text import TfidfVectorizer
-tfidf = TfidfVectorizer()
+Output:
 
-# Example text
-text1 = ['Data science is fun.', 'Data science helps us to make data driven decisions.']
-
-# Fit the vectorizer
-tfidf.fit(text1)
-
-# Print out the vovabulary
-print('Vocabulary: ')
-print(tfidf.vocabulary_)
-Same as the count vectorization, in the example corpus with two sentences 'Data science is fun.' and 'Data science helps us to make data driven decisions.', TfidfVectorizer assigned IDs from 0 to 9 to the 10 unique words in alphabetical order.
-
+```
 Vocabulary: 
 {'data': 0, 'science': 7, 'is': 5, 'fun': 3, 'helps': 4, 'us': 9, 'to': 8, 'make': 6, 'driven': 2, 'decisions': 1}
-transform method produces the TF-IDF vector values.
+```
 
+```python
 # Get the TF-IDF vector
 vector_tfidf = tfidf.transform(text1)
 
 # Print out the TF-IDF vector
 print('Full vector: ')
 print(vector_tfidf.toarray())
+```
+
 Output:
 
+```
 Full vector: 
 [[0.40993715 0.         0.         0.57615236 0.         0.57615236
   0.         0.40993715 0.         0.        ]
  [0.48719673 0.342369   0.342369   0.         0.342369   0.
   0.342369   0.24359836 0.342369   0.342369  ]]
-Question 8: What is bag of words (BoW)?
-The bag of words (BoW) model is a type of NLP model that represents text using the count of words. The order of the words is not considered. The predictions of the models are based on which words appear in a document and how many times they appeared.
-The NLP preprocessing steps such as tokenization, removing stop words, removing punctuation, stemming or lemmatization, and vectorization are usually applied before running a bag of words (BoW) model.
+```
+
+In the TF-IDF vector representation, each row corresponds to a document (sentence), and each column corresponds to a unique word from the vocabulary. The values in the matrix represent the TF-IDF scores of each word in the corresponding document. Higher values indicate higher importance of the word in the document. Note that common words like "is" and "to" have lower TF-IDF scores as they are less distinctive across the entire corpus.
+
+---
+
+**Question 8: What is bag of words (BoW)?**
+
+The bag of words (BoW) model is a popular technique used in NLP for text representation. It converts text data into numerical feature vectors without considering the order or structure of the words. The BoW model builds a vocabulary of unique words from the entire corpus and then counts the occurrences of each word in each document.
+
+In the BoW model, each document is represented as a vector of word frequencies, and the position of each word in the vector corresponds to its index in the vocabulary. If a word is present in the document, its frequency (number of occurrences) is placed in the corresponding position; otherwise, the frequency is set to zero.
+
+The BoW model is simple to implement and computationally efficient. However, it loses the sequence information of the words and does not capture the semantic relationships between them.
+
+**Example:**
+
+Consider the following corpus of two sentences:
+
+```python
+corpus = ['Data science is fun.', 'Data science helps us to make data-driven decisions.']
+```
+
+Using the BoW model, we first create a vocabulary from all unique words in the corpus:
+
+```python
+# Import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Initialize the CountVectorizer
+vectorizer = CountVectorizer()
+
+# Fit the vectorizer to the corpus and get the vocabulary
+vectorizer.fit(corpus)
+vocabulary = vectorizer.vocabulary_
+
+print('Vocabulary: ')
+print(vocabulary)
+```
+
+Output:
+
+```
+Vocabulary: 
+{'data': 0, 'science': 7, 'is': 5, 'fun': 3, 'helps': 4, 'us': 9, 'to': 8, 'make': 6, 'driven': 2, 'decisions': 1}
+```
+
+Next, we use the CountVectorizer to transform the corpus into BoW vectors:
+
+```python
+# Transform the corpus into BoW vectors
+bow_vectors = vectorizer.transform(corpus)
+
+print('Bag of Words Vectors: ')
+print(bow_vectors.toarray())
+```
+
+Output:
+
+```
+Bag of Words Vectors: 
+[[1 0 0 1 0 1 0 1 0 0]
+ [2 1 1 0 1 0 1 1 1 1]]
+```
+
+In the BoW vectors, each row corresponds to a document (sentence), and each column corresponds to a word in the vocabulary. The values in the matrix represent the frequency of each word in the corresponding document. For example, the first row represents the vector for the sentence "Data science is fun." The word "data" appears once, "science" appears once, "is" appears once, "fun" appears once, and all other words have zero frequency in this document.
+
+---
+
+**Question 9: What is word embedding?**
+
+Word embedding is a representation technique used in Natural Language Processing (NLP) to map words or phrases to continuous vector spaces, where similar words are located closer to each other in the vector space. It is a way to capture the semantic meaning and relationships between words.
+
+Word embeddings are dense and low-dimensional vector representations that are learned from large amounts of text data using techniques like Word2Vec, GloVe (Global Vectors for Word Representation), and FastText. These techniques consider the context in which words appear in sentences and learn representations that encode semantic information.
+
+Word embeddings have several advantages over traditional methods like one-hot encoding or bag-of-words:
+
+1. Dimensionality Reduction: Word embeddings map words into a lower-dimensional continuous space, reducing the dimensionality of the representation compared to one-hot encoding, which can be beneficial for computational efficiency.
+
+2. Semantic Relationships: Word embeddings capture semantic relationships between words. Similar words are close to each other in the vector space, allowing for meaningful comparisons and calculations.
+
+3. Contextual Information: Word embeddings take into account the context in which words appear. Words with similar meanings are placed close together in the vector space, making them useful for tasks like sentiment analysis and natural language understanding.
+
+4. Handling Out-of-Vocabulary (OOV) Words: Word embeddings can handle unseen or out-of-vocabulary words
+
+ by providing a continuous representation even for words not seen during training.
+
+These word embeddings are used as pre-trained word embeddings in various NLP tasks, such as text classification, named entity recognition, machine translation, and sentiment analysis. They are also used as the initial input for training more complex deep learning models for NLP tasks.
+
+---
+
+
 
 
 
