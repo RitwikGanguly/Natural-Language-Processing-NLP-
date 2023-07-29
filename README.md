@@ -356,7 +356,69 @@ Each row of the count vector represents a document, and each column represents a
 
 ---
 
+Question 7: What is TF-IDF?
+TF-IDF stands for term frequency-inverse document frequency. It measures the importance of a term in a document against all the documents in a corpus. It increases proportionally to the number of times a word appears in the document and decreases by the frequency of the word in the whole corpus.
 
+The formular is : 𝑇𝐹-𝐼𝐷𝐹(𝑡)=𝑇𝐹(𝑡)∗𝐼𝐷𝐹(𝑡)
+
+𝑇𝐹 stands for Term Frequency, which measures how many times a term occurs in a document. We expect a term to appear more times in longer documents than in shorter ones, so the term frequency is often normalized by the total number of terms in the document. It is usually denoted by 𝑇𝐹(𝑡,𝑑), indicating that the term frequency for a term is determined by the term frequency 𝑡 and its document length 𝑑.
+𝐼𝐷𝐹 stands for Inverse Document Frequency, which measures how frequently a term appears in the whole corpus. This is important because certain terms may appear a lot of times in a document but also appear a lot of times in other documents in the corpus, which makes it not so special for the document. Therefore, we need to weigh down such terms and scale up the weights of the terms not frequent across all the documents.
+👉 𝐼𝐷𝐹(𝑡)=𝑙𝑜𝑔((1+𝑁)/(1+𝐷𝐹(𝑡,𝑑))+1) where 𝑁 is the total number of documents in the corpus and 𝐷𝐹(𝑡,𝑑) is the document frequency of the term.
+
+👉 1 is added to the logarithm part of the 𝐼𝐷𝐹 to prevent zeroing out the terms that appear in every document in the corpus. When a term appears in all the documents, the numerator and denominator have the same value, so the result is 1. 𝑙𝑜𝑔1=0, so IDF equals 0 and hence 𝑇𝐹-𝐼𝐷𝐹 equals 0. Adding 1 to the equation makes the value in the logarithm always greater than 1, which prevents zeroing out terms from happening.
+
+👉 Adding 1 to the numerator and denominator of the equation prevents zero division. We can think of it as adding an extra document with all the terms in the corpus.
+
+# TFIDF Vectorization
+from sklearn.feature_extraction.text import TfidfVectorizer
+tfidf = TfidfVectorizer()
+
+# Example text
+text1 = ['Data science is fun.', 'Data science helps us to make data driven decisions.']
+
+# Fit the vectorizer
+tfidf.fit(text1)
+
+# Print out the vovabulary
+print('Vocabulary: ')
+print(tfidf.vocabulary_)
+Fitting the input text using TfidfVectorizer from sklearn automatically creates IDs for each vocabulary in the corpus.
+
+# TFIDF Vectorization
+from sklearn.feature_extraction.text import TfidfVectorizer
+tfidf = TfidfVectorizer()
+
+# Example text
+text1 = ['Data science is fun.', 'Data science helps us to make data driven decisions.']
+
+# Fit the vectorizer
+tfidf.fit(text1)
+
+# Print out the vovabulary
+print('Vocabulary: ')
+print(tfidf.vocabulary_)
+Same as the count vectorization, in the example corpus with two sentences 'Data science is fun.' and 'Data science helps us to make data driven decisions.', TfidfVectorizer assigned IDs from 0 to 9 to the 10 unique words in alphabetical order.
+
+Vocabulary: 
+{'data': 0, 'science': 7, 'is': 5, 'fun': 3, 'helps': 4, 'us': 9, 'to': 8, 'make': 6, 'driven': 2, 'decisions': 1}
+transform method produces the TF-IDF vector values.
+
+# Get the TF-IDF vector
+vector_tfidf = tfidf.transform(text1)
+
+# Print out the TF-IDF vector
+print('Full vector: ')
+print(vector_tfidf.toarray())
+Output:
+
+Full vector: 
+[[0.40993715 0.         0.         0.57615236 0.         0.57615236
+  0.         0.40993715 0.         0.        ]
+ [0.48719673 0.342369   0.342369   0.         0.342369   0.
+  0.342369   0.24359836 0.342369   0.342369  ]]
+Question 8: What is bag of words (BoW)?
+The bag of words (BoW) model is a type of NLP model that represents text using the count of words. The order of the words is not considered. The predictions of the models are based on which words appear in a document and how many times they appeared.
+The NLP preprocessing steps such as tokenization, removing stop words, removing punctuation, stemming or lemmatization, and vectorization are usually applied before running a bag of words (BoW) model.
 
 
 
