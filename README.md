@@ -252,6 +252,110 @@ The output shows that 5 consecutive tokens starting from each token are created.
 ```
 
 ---
+**Question 5: What are stemming and lemmatization?**
+
+Both stemming and lemmatization are techniques used in Natural Language Processing (NLP) to reduce words to their base or root form. The goal is to handle different inflections of the same word and treat them as the same word, thus reducing the dimensionality of the data and simplifying text analysis.
+
+**Stemming:**
+Stemming is a process of removing suffixes or prefixes from a word to obtain its root form or stem. The resulting stem may not always be a valid word. It uses simple rules and heuristics to chop off common word endings. For example, the word "running" would be stemmed to "run," and "jumps" would become "jump."
+
+**Lemmatization:**
+Lemmatization is a more advanced technique compared to stemming. It involves reducing words to their base or dictionary form, known as the lemma. Lemmatization considers the context and part-of-speech (POS) of the word to determine the lemma accurately. For example, the word "better" would be lemmatized to "good," and "cars" would become "car."
+
+**Example:**
+
+Stemming:
+
+```python
+# Stemming
+from nltk.stem import PorterStemmer
+text_stemmed = [PorterStemmer().stem(w) for w in text_no_punct]
+print(text_stemmed)
+```
+
+Output:
+
+```
+['harvard', 'univers', 'devot', 'excel', 'teach', 'learn', 'research', 'develop', 'leader', 'make', 'differ', 'global']
+```
+
+Lemmatization:
+
+```python
+# Lemmatization
+nltk.download('omw-1.4')
+nltk.download('wordnet')
+wn = nltk.WordNetLemmatizer()
+text_lemma = [wn.lemmatize(w) for w in text_no_punct]
+print(text_lemma)
+```
+
+Output:
+
+```
+['Harvard', 'University', 'devoted', 'excellence', 'teaching', 'learning', 'research', 'developing', 'leader', 'make', 'difference', 'globally']
+```
+
+---
+
+**Question 6: What is count vectorization?**
+
+Count vectorization is a popular technique used in NLP to convert a collection of text documents into a numerical feature matrix. It represents each document as a vector of token counts, where each token (word or n-gram) is assigned an index. The value in each cell of the matrix represents the frequency of the corresponding token in the document.
+
+The steps involved in count vectorization are as follows:
+
+1. Tokenization: The text is split into individual words or tokens.
+2. Vocabulary Creation: A unique set of tokens is created, and each token is assigned an index.
+3. Counting: The frequency of each token in the document is counted and placed in the corresponding cell of the matrix.
+
+**Example:**
+
+```python
+# Import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer()
+
+# Example text
+text1 = ['Data science is fun.', 'Data science helps us to make data-driven decisions.']
+
+# Fit the vectorizer
+vectorizer.fit(text1)
+
+# Print out the vocabulary
+print('Vocabulary: ')
+print(vectorizer.vocabulary_)
+```
+
+Output:
+
+```
+Vocabulary: 
+{'data': 0, 'science': 7, 'is': 5, 'fun': 3, 'helps': 4, 'us': 9, 'to': 8, 'make': 6, 'driven': 2, 'decisions': 1}
+```
+
+The `transform` method produces the count vector values. For example, the first column is at index 0, which represents the token "data." Because the word "data" appeared once in the first sentence and twice in the second sentence, we have the value of 1 for the first sentence and the value of 2 for the second sentence.
+
+```python
+# Get the count vector
+countVector = vectorizer.transform(text1)
+
+# Print out the count vector
+print('Count vector: ')
+print(countVector.toarray())
+```
+
+Output:
+
+```
+Count vector: 
+[[1 0 0 1 0 1 0 1 0 0]
+ [2 1 1 0 1 0 1 1 1 1]]
+```
+
+Each row of the count vector represents a document, and each column represents a token from the vocabulary. The values in the matrix indicate the frequency of each token in the corresponding document.
+
+---
+
 
 
 
